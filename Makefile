@@ -1,4 +1,4 @@
-.PHONY: install test lint clean run docker demo
+.PHONY: install test lint clean run docker demo docker-build docker-run docker-compose-up docker-compose-down
 
 install:
 	pip install -r requirements.txt
@@ -23,3 +23,15 @@ demo:
 docker:
 	docker build -t $(shell basename $(CURDIR)) .
 	docker run -p 8000:8000 $(shell basename $(CURDIR))
+
+docker-build:
+	docker build -t face-attendance .
+
+docker-run:
+	docker run -p 8000:8000 -v $(PWD)/data:/app/data face-attendance
+
+docker-compose-up:
+	docker compose up -d
+
+docker-compose-down:
+	docker compose down
