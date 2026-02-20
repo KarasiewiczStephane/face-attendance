@@ -1,4 +1,4 @@
-.PHONY: install test lint clean run docker
+.PHONY: install test lint clean run docker demo
 
 install:
 	pip install -r requirements.txt
@@ -16,6 +16,9 @@ clean:
 
 run:
 	python -m src.main
+
+demo:
+	python -m src.demo.webcam_demo
 
 docker:
 	docker build -t $(shell basename $(CURDIR)) .
