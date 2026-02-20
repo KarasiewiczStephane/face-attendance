@@ -1,0 +1,36 @@
+face_detection:
+  min_face_size: 20
+  thresholds: [0.6, 0.7, 0.7]  # MTCNN stages
+  device: "cpu"  # or "cuda"
+
+embedding:
+  model: "vggface2"  # pretrained model
+  image_size: 160
+  embedding_dim: 512
+
+matching:
+  similarity_threshold: 0.7
+  algorithm: "cosine"
+
+liveness:
+  blink_threshold: 0.25  # eye aspect ratio
+  texture_threshold: 0.5
+  challenge_timeout: 10  # seconds
+
+attendance:
+  dedup_window_hours: 4
+  work_start: "09:00"
+  work_end: "18:00"
+  late_threshold_minutes: 15
+
+privacy:
+  retention_days: 365
+  audit_enabled: true
+
+database:
+  path: "data/attendance.db"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
+  reload: false
