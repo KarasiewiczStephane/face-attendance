@@ -21,6 +21,10 @@ aiosqlite>=0.19
 pyyaml>=6.0
 python-dotenv>=1.0
 
+# Dashboard
+streamlit>=1.28
+plotly>=5.18
+
 # Dev
 pytest>=7.0
 pytest-cov>=4.0
