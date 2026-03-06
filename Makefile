@@ -1,4 +1,4 @@
-.PHONY: install test lint clean run docker demo docker-build docker-run docker-compose-up docker-compose-down
+.PHONY: install test lint clean run docker demo dashboard docker-build docker-run docker-compose-up docker-compose-down
 
 install:
 	pip install -r requirements.txt
@@ -19,6 +19,9 @@ run:
 
 demo:
 	python -m src.demo.webcam_demo
+
+dashboard:
+	streamlit run src/dashboard/app.py
 
 docker:
 	docker build -t $(shell basename $(CURDIR)) .

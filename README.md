@@ -10,25 +10,29 @@
 - **REST API** -- FastAPI endpoints for enrollment, verification, attendance queries, and reporting
 - **Attendance Logging** -- Automatic deduplication, on-time/late/absent status, daily and weekly reports (JSON, CSV, Markdown)
 - **Privacy Controls** -- GDPR-compliant: complete data deletion, configurable retention, full audit logging
+- **Streamlit Dashboard** -- Interactive attendance visualization with log tables, daily charts, weekly summaries, and face database gallery
 - **Webcam Demo** -- Real-time camera feed with overlaid bounding boxes, names, confidence scores, and liveness status
 
 ## Quick Start
 
 ```bash
-# Clone
+# Clone and install
 git clone git@github.com:KarasiewiczStephane/face-attendance.git
 cd face-attendance
-
-# Install
 pip install -r requirements.txt
 
-# Run API server
+# 1. Run API server (http://localhost:8000)
 make run
-# API available at http://localhost:8000
 
-# Run webcam demo
+# 2. Launch the Streamlit dashboard (http://localhost:8501)
+make dashboard
+
+# 3. Run webcam demo (requires camera)
 make demo
 ```
+
+The dashboard uses synthetic demo data and does not require the API server to be running.
+To enroll faces and log real attendance, start the API first and use the `/enroll` and `/verify` endpoints (see below).
 
 ## Docker
 
@@ -117,22 +121,39 @@ Edit `configs/config.yaml` to customize:
 ```yaml
 face_detection:
   min_face_size: 20
-  device: "cpu"              # or "cuda"
+  thresholds: [0.6, 0.7, 0.7]  # MTCNN stages
+  device: "cpu"                 # or "cuda"
+
+embedding:
+  model: "vggface2"
+  image_size: 160
+  embedding_dim: 512
 
 matching:
-  similarity_threshold: 0.7  # cosine similarity cutoff
+  similarity_threshold: 0.7
+  algorithm: "cosine"
 
 liveness:
-  blink_threshold: 0.25      # EAR threshold for blink detection
-  texture_threshold: 0.5     # LBP entropy threshold
+  blink_threshold: 0.25     # eye aspect ratio
+  texture_threshold: 0.5
+  challenge_timeout: 10      # seconds
 
 attendance:
-  dedup_window_hours: 4      # prevent duplicate logs
+  dedup_window_hours: 4
   work_start: "09:00"
+  work_end: "18:00"
   late_threshold_minutes: 15
 
 privacy:
-  retention_days: 365        # auto-delete after N days
+  retention_days: 365
+  audit_enabled: true
+
+database:
+  path: "data/attendance.db"
+
+api:
+  host: "0.0.0.0"
+  port: 8000
 ```
 
 ## Project Structure
@@ -141,6 +162,7 @@ privacy:
 face-attendance/
 ├── src/
 │   ├── api/               # FastAPI app, schemas, routes
+│   ├── dashboard/         # Streamlit attendance visualization
 │   ├── database/          # SQLite schema, face DB, attendance DB
 │   ├── detection/         # MTCNN detector, FaceNet embedder, liveness
 │   ├── matching/          # Cosine similarity matcher, caching service
