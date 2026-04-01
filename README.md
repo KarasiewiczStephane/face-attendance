@@ -200,6 +200,11 @@ make test
 make clean
 ```
 
+
+## Author
+
+**Stéphane Karasiewicz** — [skarazdata.com](https://skarazdata.com) | [LinkedIn](https://www.linkedin.com/in/stephane-karasiewicz/)
+
 ## License
 
 MIT
